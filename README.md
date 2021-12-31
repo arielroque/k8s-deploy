@@ -4,23 +4,23 @@
 
 # K8s deploy
 
-## :bookmark: Requirements
-- [Docker](https://docs.docker.com/engine/install/ubuntu/) 
-- [Docker Compose](https://docs.docker.com/compose/install/) 
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
-- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
-
-
-## :triangular_flag_on_post: Starting
+## Wordpress Deploy
 
 ```bash
-# Clone repository
-git clone https://github.com/arielroque/k8s-deploy.git
+#Create pod
+kubectl apply -f wp-dumb.yaml
 
-cd k8s-deploy
+#See result
+kubectl get pods
 
-#Start minikube
-minikube start
+#See pod by label
+kubectl get pods -l app=wordpress
+
+#Create a file
+echo "lala" > file.txt
+
+# copiando um arquivo para o container
+$ kubectl cp file.txt meu-blog:/var/www/html
+
 ```
 
-> minikube start --cpus=2 --memory='4g'
