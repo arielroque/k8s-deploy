@@ -23,4 +23,9 @@ cd k8s-deploy
 minikube start
 ```
 
-> minikube start --cpus=2 --memory='4g'
+> See more [here](https://minikube.sigs.k8s.io/docs/start/) about minikube start command options 
+
+## :building_construction: Deploys 
+
+- [Wordpress](https://github.com/arielroque/k8s-deploy/tree/wordpress)
+- [Flask API with MySQL](https://github.com/arielroque/k8s-deploy/tree/flask-mysql-pv-volume)
