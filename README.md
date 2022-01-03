@@ -4,23 +4,86 @@
 
 # K8s deploy
 
-## :bookmark: Requirements
-- [Docker](https://docs.docker.com/engine/install/ubuntu/) 
-- [Docker Compose](https://docs.docker.com/compose/install/) 
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
-- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+## Flask-Mysql-Volume
 
 
-## :triangular_flag_on_post: Starting
+### Build images
 
 ```bash
-# Clone repository
-git clone https://github.com/arielroque/k8s-deploy.git
+eval $(minikube docker-env)
 
-cd k8s-deploy
+docker pull mysql
 
-#Start minikube
-minikube start
+docker build . -t flask-api
 ```
 
-> minikube start --cpus=2 --memory='4g'
+### Secrets
+
+```bash
+#Get the base64 version of the password
+echo -n <PASSWORD> | base64
+```
+
+```bash
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flaskapi-secrets
+type: Opaque
+data:
+  db_root_password: <Insert your base64 password here>
+```
+
+```bash
+kubectl apply -f secrets.yml
+```
+
+### Persistent Volume
+
+```bash
+kubectl apply -f persistent-volume.yml 
+```
+
+> To see if the details of your created resources via kubectl describe pv mysql-pv-volume and kubectl describe pvc mysql-pv-claim
+
+
+### Mysql Server
+
+```bash
+#Run mysql deployment
+kubectl apply -f mysql-deployment.yml
+```
+
+```bash
+ kubectl exec -ti mysql-<random-digits-here> /bin/bash
+
+ mysql -u root -p
+
+ <Insert the password>
+
+CREATE DATABASE flaskapi;
+
+USE flaskapi;
+
+CREATE TABLE users(user_id INT PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(255), user_email VARCHAR(255), user_password VARCHAR(255));
+
+quit;
+
+exit
+```
+
+### Flask API
+
+```bash
+kubectl apply -f flaskapp-deployment.yml
+
+## Get the address of the service
+minikube service flask-service
+```
+
+
+
+
+
+
+
